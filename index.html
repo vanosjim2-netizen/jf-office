@@ -4,154 +4,207 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>jf.office</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='116' fill='%2315161a'/%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round'%3E%3Cpath d='M161 196V318Q161 384 96 384' stroke-width='52'/%3E%3Cpath d='M271 384V200Q271 130 341 130' stroke-width='52'/%3E%3Cpath d='M224 226H330' stroke-width='44'/%3E%3C/g%3E%3Ccircle cx='161' cy='128' r='28' fill='%23fff'/%3E%3Crect x='356' y='322' width='44' height='44' rx='11' fill='%233b6cff'/%3E%3Crect x='406' y='322' width='44' height='44' rx='11' fill='%232f9e44'/%3E%3Crect x='356' y='372' width='44' height='44' rx='11' fill='%23fab005'/%3E%3Crect x='406' y='372' width='44' height='44' rx='11' fill='%23e03131'/%3E%3C/svg%3E">
 <script>
 (function(){var p=localStorage.getItem('jf-theme')||'auto';var d=p==='dark'||(p==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';})();
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#f4f4f6;--panel:#fff;--line:#e3e3e8;--hover:#ececf1;--text:#16161a;--muted:#6b6b76;--accent:#3b6cff;--tint:rgba(59,108,255,.1);--shadow:0 1px 4px rgba(0,0,0,.08);--danger:#e03131}
-[data-theme=dark]{--bg:#0f0f10;--panel:#18181b;--line:#2a2a2e;--hover:#222226;--text:#f4f4f5;--muted:#9a9aa3;--accent:#6b8cff;--tint:rgba(107,140,255,.14);--shadow:none;--danger:#ff6b6b}
+:root{--bg:#eef0f3;--surface:#ffffff;--ink:#15161a;--muted:#676b74;--line:#dfe2e7;--hover:#f6f7f9;--soft:rgba(21,22,26,.07);--danger:#c92a2a}
+[data-theme=dark]{--bg:#101114;--surface:#18191d;--ink:#eef0f3;--muted:#9a9ea7;--line:#2a2c31;--hover:#1f2025;--soft:rgba(238,240,243,.08);--danger:#ff8787}
 html,body{min-height:100%}
-body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
-button,input{font:inherit}
-button{cursor:pointer}
+body{font-family:Onest,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
 a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
 .hidden{display:none!important}
-.boot{height:100vh;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:600}
-.logo{display:flex}.logo svg{width:36px;height:36px}
-.dot{color:var(--accent)}
-#auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
-#auth .themeBtn{position:absolute;top:16px;right:16px}
-.auth-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:34px;width:100%;max-width:400px;box-shadow:var(--shadow)}
-.auth-card .brand{font-size:26px}.auth-card .logo svg{width:46px;height:46px}
-.sub{color:var(--muted);font-size:14px;margin-top:8px}
-.mini-apps{display:flex;gap:8px;margin-top:16px}
-.mini-apps .logo svg{width:30px;height:30px}
-.tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:10px;margin:22px 0 16px}
-.tabs button{flex:1;padding:8px;border:0;border-radius:8px;background:transparent;color:var(--muted)}
-.tabs button.active{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
-.field{display:block;margin-bottom:12px}
-.field span{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
-.inp{width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text)}
-.inp:focus{outline:2px solid var(--accent);outline-offset:-1px}
-.btn{padding:10px 14px;border:0;border-radius:8px;background:#111;color:#fff;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-[data-theme=dark] .btn{background:#f4f4f5;color:#111}
-.btn:disabled{opacity:.6;cursor:default}
+.boot{height:100vh}
+.mark{display:inline-flex}.mark svg{display:block}
+.wrap{max-width:980px;margin:0 auto;padding:0 28px}
+
+/* inloggen */
+#auth{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.auth-side{background:#15161a;color:#eef0f3;padding:56px;display:flex;flex-direction:column;justify-content:space-between}
+.auth-side .mark svg{width:64px;height:64px}
+.auth-side h1{font-size:44px;line-height:1.08;font-weight:600;letter-spacing:-.025em;margin-top:40px;max-width:12ch}
+.auth-side p{color:#a6aab3;margin-top:16px;max-width:34ch;font-size:16px}
+.auth-apps{display:flex;gap:10px}
+.auth-apps svg{width:34px;height:34px;display:block}
+.auth-main{display:flex;align-items:center;justify-content:center;padding:40px 28px}
+.auth-form{width:100%;max-width:360px}
+.auth-form h2{font-size:24px;font-weight:600;letter-spacing:-.015em}
+.auth-form .lead{color:var(--muted);margin:6px 0 26px}
+.field{display:block;margin-bottom:14px}
+.field span{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+.inp{width:100%;height:44px;padding:0 13px;background:var(--surface);border:1px solid var(--line);border-radius:10px;outline:none}
+.inp:focus{border-color:var(--ink);box-shadow:0 0 0 3px var(--soft)}
+.btn{height:44px;padding:0 18px;border-radius:10px;background:var(--ink);color:var(--bg);font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.btn:disabled{opacity:.55;cursor:default}
 .full{width:100%}
-.link{background:none;border:0;color:var(--muted);font-size:13px;margin-top:12px;text-decoration:underline}
-.msg{font-size:13px;margin-top:12px;min-height:18px}
-.msg.err{color:var(--danger)}.msg.ok{color:#2f9e44}
-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:0 20px;height:58px;border-bottom:1px solid var(--line);background:var(--panel)}
-header .logo svg{width:32px;height:32px}
+.switch{margin-top:18px;font-size:14px;color:var(--muted)}
+.switch button{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.msg{font-size:14px;margin-top:14px;min-height:20px}
+.msg.err{color:var(--danger)}.msg.ok{color:#2b8a3e}
+[data-theme=dark] .msg.ok{color:#8ce99a}
+
+/* startscherm */
+header{height:76px;display:flex;align-items:center;gap:12px}
+header .mark svg{width:30px;height:30px}
+.word{font-size:17px;font-weight:600;letter-spacing:-.01em}
 .spacer{flex:1}
-.icon-btn{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 11px;font-size:13px;white-space:nowrap}
-.icon-btn:hover{background:var(--hover)}
-.icon-btn.on{border-color:var(--accent);color:var(--accent)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--bg);font-weight:600;display:flex;align-items:center;justify-content:center;font-size:15px}
 .menu{position:relative}
 .menu summary{list-style:none}
 .menu summary::-webkit-details-marker{display:none}
-.menu-pop{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:220px;z-index:40;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.menu-pop button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--text);padding:8px 10px;border-radius:6px;font-size:14px}
-.menu-pop button:hover{background:var(--hover)}
-.menu-pop .info{padding:8px 10px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);margin-bottom:4px;word-break:break-all}
-main{max-width:1100px;margin:0 auto;padding:34px 20px 60px}
-.hello h1{font-size:30px;font-weight:700}
-.hello p{color:var(--muted);margin-top:4px}
-.search-row{margin:22px 0 28px;position:relative}
-.search-row .inp{padding:13px 16px 13px 44px;font-size:16px;border-radius:12px;background:var(--panel)}
-.search-row span{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px}
-.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.app{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;overflow:hidden}
-.app::after{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--c)}
-.app:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.12);border-color:var(--c)}
-.app .logo svg{width:52px;height:52px}
-.app b{font-size:17px}
-.app .ds{font-size:13px;color:var(--muted);margin-top:2px}
-.app .cnt{font-size:12px;color:var(--muted);margin-top:auto}
-h2.sec{font-size:17px;margin:34px 0 12px;display:flex;align-items:center;gap:10px}
-.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.filters button{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:6px 14px;font-size:13px}
-.filters button.on{background:var(--text);color:var(--bg);border-color:var(--text)}
-.files{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.file{display:flex;align-items:center;gap:14px;padding:11px 16px;border-bottom:1px solid var(--line);cursor:pointer}
-.file:last-child{border-bottom:0}
-.file:hover{background:var(--hover)}
-.file .logo svg{width:30px;height:30px}
-.file .t{flex:1;min-width:0}
-.file .t b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.file .t span{font-size:12px;color:var(--muted)}
-.file .d{font-size:12px;color:var(--muted);white-space:nowrap}
-.empty{padding:26px;text-align:center;color:var(--muted);font-size:14px}
-.favs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-.fav{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px}
-.fav:hover{background:var(--hover)}
-.fav .logo svg{width:26px;height:26px}
-.fav b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-.fav span{font-size:12px;color:var(--muted)}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 0 10px}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;z-index:200}
-@media(max-width:860px){.apps{grid-template-columns:repeat(2,1fr)}.hello h1{font-size:24px}}
-@media(max-width:480px){.apps{grid-template-columns:1fr 1fr;gap:10px}.app{padding:14px}.app .logo svg{width:42px;height:42px}.file .d{display:none}}
+.pop{position:absolute;right:0;top:calc(100% + 8px);width:260px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:0 14px 36px rgba(0,0,0,.14);z-index:20}
+.pop .who{padding:10px 10px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.pop .who b{display:block;font-weight:600}
+.pop .who span{font-size:13px;color:var(--muted);word-break:break-all}
+.pop .item{display:block;width:100%;text-align:left;padding:9px 10px;border-radius:8px;font-size:14px}
+.pop .item:hover{background:var(--hover)}
+.pop .lbl{font-size:13px;color:var(--muted);padding:10px 10px 6px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--bg);border-radius:9px;padding:3px;margin:0 6px 6px}
+.seg button{padding:6px 0;border-radius:7px;font-size:13px;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pop hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+.hero{padding:44px 0 0}
+.hero .date{color:var(--muted);font-size:15px}
+.hero h1{font-size:48px;line-height:1.08;font-weight:600;letter-spacing:-.03em;margin-top:6px}
+.quad{display:inline-grid;grid-template-columns:1fr 1fr;gap:.06em;width:.34em;height:.34em;margin-left:.06em;vertical-align:baseline}
+.quad i{border-radius:.05em}
+.search{position:relative;margin:30px 0 0}
+.search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search input{width:100%;height:54px;padding:0 54px 0 46px;font-size:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;outline:none}
+.search input:focus{border-color:var(--ink);box-shadow:0 0 0 4px var(--soft)}
+.search kbd{position:absolute;right:14px;top:50%;transform:translateY(-50%);font:inherit;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 8px}
+.apps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:22px}
+.app{display:grid;grid-template-columns:46px minmax(0,1fr);gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.app:hover{border-color:var(--muted)}
+.app svg{width:46px;height:46px;display:block}
+.app b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:52px 0 12px;flex-wrap:wrap}
+.shead h2{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.tabs{display:flex;gap:18px;flex-wrap:wrap}
+.tabs button{font-size:14px;color:var(--muted);padding:2px 0;border-bottom:2px solid transparent}
+.tabs button:hover{color:var(--ink)}
+.tabs button.on{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+.favs{display:flex;flex-wrap:wrap;gap:8px}
+.fav{display:inline-flex;align-items:center;gap:9px;max-width:280px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px 8px 9px;font-size:14px;font-weight:500}
+.fav:hover{border-color:var(--muted)}
+.fav svg{width:22px;height:22px;flex:0 0 auto;display:block}
+.fav span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 170px 150px;gap:16px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);width:100%;text-align:left}
+.row:first-child{border-top:0}
+.row.head{font-size:13px;color:var(--muted);padding-top:10px;padding-bottom:10px;cursor:default}
+button.row:hover{background:var(--hover)}
+.row .n{display:flex;align-items:center;gap:12px;min-width:0}
+.row .n svg{width:26px;height:26px;flex:0 0 auto;display:block}
+.row .n span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.row .a{font-size:14px;color:var(--muted)}
+.row .d{font-size:14px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.badge{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-left:8px;font-weight:400}
+.empty{padding:34px 18px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+footer{padding:56px 0 40px;color:var(--muted);font-size:13px}
+@media(max-width:860px){
+#auth{grid-template-columns:1fr}
+.auth-side{padding:32px 28px}
+.auth-side h1{font-size:32px;margin-top:24px}
+.auth-apps{margin-top:24px}
+.apps{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hero h1{font-size:36px}
+}
+@media(max-width:560px){
+.wrap{padding:0 18px}
+.row{grid-template-columns:minmax(0,1fr) 110px}
+.row .a{display:none}
+.app{grid-template-columns:38px minmax(0,1fr);padding:13px;gap:10px}
+.app svg{width:38px;height:38px}
+.hero h1{font-size:30px}
+}
 </style>
 </head>
 <body>
-<div class="boot" id="boot">Laden...</div>
-<svg width="0" height="0" style="position:absolute">
+<div class="boot" id="boot"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <defs>
-<symbol id="i-office" viewBox="40 40 220 220"><rect x="42" y="42" width="216" height="216" rx="48" fill="#111" stroke="#2a2a2e" stroke-width="4"/><rect x="62" y="62" width="82" height="82" rx="16" fill="#3b6cff"/><rect x="156" y="62" width="82" height="82" rx="16" fill="#2f9e44"/><rect x="62" y="156" width="82" height="82" rx="16" fill="#fab005"/><rect x="156" y="156" width="82" height="82" rx="16" fill="#e03131"/><rect x="80" y="80" width="30" height="5" rx="2.5" fill="#fff" opacity=".9"/><rect x="80" y="91" width="44" height="5" rx="2.5" fill="#fff" opacity=".6"/><rect x="190" y="80" width="30" height="22" rx="3" fill="none" stroke="#fff" stroke-width="3"/><line x1="205" y1="80" x2="205" y2="102" stroke="#fff" stroke-width="3"/><rect x="80" y="210" width="8" height="12" rx="2" fill="#111" opacity=".55"/><rect x="92" y="203" width="8" height="19" rx="2" fill="#111" opacity=".55"/><rect x="200" y="206" width="16" height="16" rx="3" fill="none" stroke="#fff" stroke-width="3"/><polyline points="203,214 207,218 214,209" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="110" y="124" width="80" height="52" rx="14" fill="#fff" stroke="#111" stroke-width="5"/><text x="150" y="161" text-anchor="middle" font-size="30" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#3b6cff">.</tspan></text></symbol>
-<symbol id="i-pages" viewBox="60 50 200 200"><rect x="64" y="54" width="192" height="192" rx="42" fill="#111" stroke="#2a2a2e" stroke-width="6"/><path d="M105 86q0-6 6-6h74l30 30v109q0 6-6 6h-98q-6 0-6-6z" fill="#fff"/><path d="M185 80v24q0 6 6 6h24z" fill="#9db4ff"/><text x="120" y="150" font-size="46" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#3b6cff">.</tspan></text><rect x="120" y="170" width="80" height="7" rx="3.5" fill="#3b6cff"/><rect x="120" y="186" width="64" height="7" rx="3.5" fill="#c9d5ff"/><rect x="120" y="202" width="72" height="7" rx="3.5" fill="#c9d5ff"/></symbol>
-<symbol id="i-cells" viewBox="70 155 200 200"><rect x="74" y="159" width="192" height="192" rx="42" fill="#111" stroke="#2a2a2e" stroke-width="6"/><rect x="102" y="187" width="136" height="136" rx="10" fill="#fff"/><path d="M102 197q0-10 10-10h116q10 0 10 10v24h-136z" fill="#2f9e44"/><text x="114" y="214" font-size="22" font-weight="700" font-family="system-ui,sans-serif" fill="#fff">jf.</text><path d="M102 313v-92h30v102h-20q-10 0-10-10z" fill="#d3f9d8"/><line x1="132" y1="221" x2="132" y2="323" stroke="#b2dfbd" stroke-width="2"/><line x1="185" y1="221" x2="185" y2="323" stroke="#b2dfbd" stroke-width="2"/><line x1="102" y1="255" x2="238" y2="255" stroke="#b2dfbd" stroke-width="2"/><line x1="102" y1="289" x2="238" y2="289" stroke="#b2dfbd" stroke-width="2"/><rect x="133" y="256" width="51" height="32" fill="#e6f7ea" stroke="#2f9e44" stroke-width="3"/><rect x="194" y="236" width="34" height="7" rx="3.5" fill="#2f9e44"/></symbol>
-<symbol id="i-pres" viewBox="190 105 300 300"><rect x="194" y="109" width="292" height="292" rx="64" fill="#111" stroke="#2a2a2e" stroke-width="8"/><rect x="220" y="150" width="240" height="140" rx="10" fill="#fff"/><path d="M220 160q0-10 10-10h220q10 0 10 10v4h-240z" fill="#fab005"/><text x="238" y="212" font-size="40" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#f59f00">.</tspan></text><rect x="238" y="230" width="90" height="8" rx="4" fill="#fab005"/><rect x="238" y="248" width="70" height="8" rx="4" fill="#ffe8a3"/><rect x="372" y="242" width="16" height="34" rx="3" fill="#ffe066"/><rect x="394" y="222" width="16" height="54" rx="3" fill="#fcc419"/><rect x="416" y="200" width="16" height="76" rx="3" fill="#f59f00"/><rect x="220" y="314" width="66" height="40" rx="6" fill="#3a3a40"/><rect x="307" y="314" width="66" height="40" rx="6" fill="#fff" stroke="#fab005" stroke-width="4"/><rect x="394" y="314" width="66" height="40" rx="6" fill="#3a3a40"/></symbol>
-<symbol id="i-notes" viewBox="420 40 220 220"><rect x="424" y="44" width="212" height="212" rx="46" fill="#111" stroke="#2a2a2e" stroke-width="6"/><rect x="462" y="74" width="128" height="152" rx="10" fill="#fff"/><rect x="588" y="88" width="18" height="24" rx="5" fill="#e03131"/><rect x="588" y="118" width="18" height="24" rx="5" fill="#ff8787"/><rect x="588" y="148" width="18" height="24" rx="5" fill="#ffc9c9"/><rect x="452" y="92" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="120" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="148" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="176" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="204" width="20" height="9" rx="4.5" fill="#e03131"/><text x="482" y="117" font-size="30" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#e03131">.</tspan></text><rect x="482" y="132" width="86" height="6" rx="3" fill="#e03131"/><rect x="482" y="152" width="15" height="15" rx="3" fill="none" stroke="#e03131" stroke-width="3"/><polyline points="485,159 489,163 495,155" fill="none" stroke="#e03131" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="505" y="156" width="62" height="6" rx="3" fill="#ffc9c9"/><rect x="482" y="178" width="15" height="15" rx="3" fill="none" stroke="#e03131" stroke-width="3"/><rect x="505" y="182" width="50" height="6" rx="3" fill="#ffc9c9"/></symbol>
+<symbol id="i-office" viewBox="0 0 512 512"><rect width="512" height="512" rx="116" fill="#15161a"/><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"><path d="M161 196V318Q161 384 96 384" stroke-width="52"/><path d="M271 384V200Q271 130 341 130" stroke-width="52"/><path d="M224 226H330" stroke-width="44"/></g><circle cx="161" cy="128" r="28" fill="#fff"/><rect x="356" y="322" width="44" height="44" rx="11" fill="#3b6cff"/><rect x="406" y="322" width="44" height="44" rx="11" fill="#2f9e44"/><rect x="356" y="372" width="44" height="44" rx="11" fill="#fab005"/><rect x="406" y="372" width="44" height="44" rx="11" fill="#e03131"/></symbol>
+<symbol id="i-pages" viewBox="60 50 200 200"><rect x="64" y="54" width="192" height="192" rx="42" fill="#15161a"/><path d="M105 86q0-6 6-6h74l30 30v109q0 6-6 6h-98q-6 0-6-6z" fill="#fff"/><path d="M185 80v24q0 6 6 6h24z" fill="#9db4ff"/><text x="120" y="150" font-size="46" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#3b6cff">.</tspan></text><rect x="120" y="170" width="80" height="7" rx="3.5" fill="#3b6cff"/><rect x="120" y="186" width="64" height="7" rx="3.5" fill="#c9d5ff"/><rect x="120" y="202" width="72" height="7" rx="3.5" fill="#c9d5ff"/></symbol>
+<symbol id="i-cells" viewBox="70 155 200 200"><rect x="74" y="159" width="192" height="192" rx="42" fill="#15161a"/><rect x="102" y="187" width="136" height="136" rx="10" fill="#fff"/><path d="M102 197q0-10 10-10h116q10 0 10 10v24h-136z" fill="#2f9e44"/><text x="114" y="214" font-size="22" font-weight="700" font-family="system-ui,sans-serif" fill="#fff">jf.</text><path d="M102 313v-92h30v102h-20q-10 0-10-10z" fill="#d3f9d8"/><line x1="132" y1="221" x2="132" y2="323" stroke="#b2dfbd" stroke-width="2"/><line x1="185" y1="221" x2="185" y2="323" stroke="#b2dfbd" stroke-width="2"/><line x1="102" y1="255" x2="238" y2="255" stroke="#b2dfbd" stroke-width="2"/><line x1="102" y1="289" x2="238" y2="289" stroke="#b2dfbd" stroke-width="2"/><rect x="133" y="256" width="51" height="32" fill="#e6f7ea" stroke="#2f9e44" stroke-width="3"/><rect x="194" y="236" width="34" height="7" rx="3.5" fill="#2f9e44"/></symbol>
+<symbol id="i-pres" viewBox="190 105 300 300"><rect x="194" y="109" width="292" height="292" rx="64" fill="#15161a"/><rect x="220" y="150" width="240" height="140" rx="10" fill="#fff"/><path d="M220 160q0-10 10-10h220q10 0 10 10v4h-240z" fill="#fab005"/><text x="238" y="212" font-size="40" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#f59f00">.</tspan></text><rect x="238" y="230" width="90" height="8" rx="4" fill="#fab005"/><rect x="238" y="248" width="70" height="8" rx="4" fill="#ffe8a3"/><rect x="372" y="242" width="16" height="34" rx="3" fill="#ffe066"/><rect x="394" y="222" width="16" height="54" rx="3" fill="#fcc419"/><rect x="416" y="200" width="16" height="76" rx="3" fill="#f59f00"/><rect x="220" y="314" width="66" height="40" rx="6" fill="#3a3a40"/><rect x="307" y="314" width="66" height="40" rx="6" fill="#fff" stroke="#fab005" stroke-width="4"/><rect x="394" y="314" width="66" height="40" rx="6" fill="#3a3a40"/></symbol>
+<symbol id="i-notes" viewBox="420 40 220 220"><rect x="424" y="44" width="212" height="212" rx="46" fill="#15161a"/><rect x="462" y="74" width="128" height="152" rx="10" fill="#fff"/><rect x="588" y="88" width="18" height="24" rx="5" fill="#e03131"/><rect x="588" y="118" width="18" height="24" rx="5" fill="#ff8787"/><rect x="588" y="148" width="18" height="24" rx="5" fill="#ffc9c9"/><rect x="452" y="92" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="120" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="148" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="176" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="204" width="20" height="9" rx="4.5" fill="#e03131"/><text x="482" y="117" font-size="30" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#e03131">.</tspan></text><rect x="482" y="132" width="86" height="6" rx="3" fill="#e03131"/><rect x="482" y="152" width="15" height="15" rx="3" fill="none" stroke="#e03131" stroke-width="3"/><polyline points="485,159 489,163 495,155" fill="none" stroke="#e03131" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="505" y="156" width="62" height="6" rx="3" fill="#ffc9c9"/><rect x="482" y="178" width="15" height="15" rx="3" fill="none" stroke="#e03131" stroke-width="3"/><rect x="505" y="182" width="50" height="6" rx="3" fill="#ffc9c9"/></symbol>
 </defs>
 </svg>
 
 <div id="auth" class="hidden">
-  <button class="icon-btn themeBtn"></button>
-  <div class="auth-card">
-    <div class="brand"><span class="logo"><svg><use href="#i-office"/></svg></span><span>jf<span class="dot">.</span>office</span></div>
-    <p class="sub">Eén account voor al je jf.tools: documenten, spreadsheets, presentaties en notities.</p>
-    <div class="mini-apps"><span class="logo"><svg><use href="#i-pages"/></svg></span><span class="logo"><svg><use href="#i-cells"/></svg></span><span class="logo"><svg><use href="#i-pres"/></svg></span><span class="logo"><svg><use href="#i-notes"/></svg></span></div>
-    <div class="tabs">
-      <button type="button" data-mode="login" class="active">Inloggen</button>
-      <button type="button" data-mode="register">Registreren</button>
+  <aside class="auth-side">
+    <div>
+      <span class="mark"><svg><use href="#i-office"/></svg></span>
+      <h1>Al je werk op één plek.</h1>
+      <p>Documenten, spreadsheets, presentaties en notities, met één account.</p>
     </div>
-    <form id="authForm">
-      <label class="field"><span>E-mail</span><input class="inp" type="email" id="email" required autocomplete="email"></label>
+    <div class="auth-apps" aria-hidden="true"><svg><use href="#i-pages"/></svg><svg><use href="#i-cells"/></svg><svg><use href="#i-pres"/></svg><svg><use href="#i-notes"/></svg></div>
+  </aside>
+  <main class="auth-main">
+    <form class="auth-form" id="authForm">
+      <h2 id="authTitle">Inloggen</h2>
+      <p class="lead" id="authLead">Welkom terug bij jf.office.</p>
+      <label class="field"><span>E-mailadres</span><input class="inp" type="email" id="email" required autocomplete="email"></label>
       <label class="field"><span>Wachtwoord</span><input class="inp" type="password" id="password" required autocomplete="current-password"></label>
       <button class="btn full" id="authSubmit" type="submit">Inloggen</button>
+      <div class="msg" id="authMsg"></div>
+      <p class="switch" id="switchRow"><span id="switchText">Nog geen account?</span> <button type="button" id="switchBtn">Account maken</button></p>
+      <p class="switch"><button type="button" id="forgot">Wachtwoord vergeten</button></p>
     </form>
-    <button class="link" id="forgot" type="button">Wachtwoord vergeten?</button>
-    <div class="msg" id="authMsg"></div>
-  </div>
+  </main>
 </div>
 
 <div id="home" class="hidden">
-  <header>
-    <a class="brand" href="./"><span class="logo"><svg><use href="#i-office"/></svg></span><span>jf<span class="dot">.</span>office</span></a>
-    <div class="spacer"></div>
-    <button class="icon-btn themeBtn"></button>
-    <details class="menu">
-      <summary class="icon-btn">&#9881; Account</summary>
-      <div class="menu-pop">
-        <div class="info" id="userEmail"></div>
-        <button id="pwBtn">Wachtwoord wijzigen</button>
-        <button id="logout">Uitloggen</button>
+  <div class="wrap">
+    <header>
+      <a href="./" class="mark" aria-label="jf.office"><svg><use href="#i-office"/></svg></a>
+      <span class="word">jf.office</span>
+      <span class="spacer"></span>
+      <details class="menu" id="acct">
+        <summary class="avatar" id="avatar" aria-label="Account en instellingen">J</summary>
+        <div class="pop">
+          <div class="who"><b id="whoName"></b><span id="whoMail"></span></div>
+          <button class="item" id="nameBtn">Naam wijzigen</button>
+          <button class="item" id="pwBtn">Wachtwoord wijzigen</button>
+          <div class="lbl">Weergave</div>
+          <div class="seg" id="themeSeg"><button data-t="auto">Systeem</button><button data-t="light">Licht</button><button data-t="dark">Donker</button></div>
+          <hr>
+          <button class="item" id="logout">Uitloggen</button>
+        </div>
+      </details>
+    </header>
+    <section class="hero">
+      <p class="date" id="today"></p>
+      <h1 id="hello">Hallo<span class="quad" aria-hidden="true"><i style="background:#3b6cff"></i><i style="background:#2f9e44"></i><i style="background:#fab005"></i><i style="background:#e03131"></i></span></h1>
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="search" placeholder="Zoek in al je bestanden" aria-label="Zoek in al je bestanden">
+        <kbd>/</kbd>
       </div>
-    </details>
-  </header>
-  <main>
-    <div class="hello"><h1 id="hello">Hallo!</h1><p id="today"></p></div>
-    <div class="search-row"><span>&#128269;</span><input class="inp" id="search" placeholder="Zoek in al je documenten, spreadsheets, presentaties en notities...  (druk op /)"></div>
-    <div class="apps" id="apps"></div>
-    <div id="favWrap" class="hidden"><h2 class="sec">&#9733; Favorieten</h2><div class="favs" id="favs"></div></div>
-    <h2 class="sec">&#128338; Recent</h2>
-    <div class="filters" id="filters"></div>
-    <div class="files" id="files"><div class="empty">Laden...</div></div>
-    <footer>jf.office &middot; gemaakt door Jim</footer>
-  </main>
+    </section>
+    <nav class="apps" id="apps" aria-label="Apps"></nav>
+    <section id="favWrap" class="hidden">
+      <div class="shead"><h2>Favorieten</h2></div>
+      <div class="favs" id="favs"></div>
+    </section>
+    <section>
+      <div class="shead"><h2>Recent</h2><div class="tabs" id="tabs"></div></div>
+      <div class="list" id="files"><div class="empty">Bestanden laden</div></div>
+    </section>
+    <footer>jf.office</footer>
+  </div>
 </div>
 
 <script>
@@ -159,111 +212,140 @@ const SUPABASE_URL = 'https://azzhruqhvmxqwsyatlju.supabase.co';
 let SUPABASE_KEY = 'PLAK_HIER_JE_ANON_KEY';
 const $ = id => document.getElementById(id);
 const APPS = [
-  { key: 'pages', name: 'jf.pages', desc: 'Documenten schrijven', table: 'documents', url: '../jf-pages/', last: 'jf-last', color: '#3b6cff', word: ['document', 'documenten'] },
-  { key: 'cells', name: 'jf.cells', desc: 'Spreadsheets en rekenen', table: 'workbooks', url: '../jf-cells/', last: 'jf-cells-last', color: '#2f9e44', word: ['spreadsheet', 'spreadsheets'] },
-  { key: 'pres', name: 'jf.presentations', desc: 'Presentaties maken', table: 'presentations', url: '../jf-presentations/', last: 'jf-pres-last', color: '#fab005', word: ['presentatie', 'presentaties'] },
-  { key: 'notes', name: 'jf.notes', desc: 'Notitieblokken', table: 'notebooks', url: '../jf-notes/', last: 'jf-notes-last', color: '#e03131', word: ['notitieblok', 'notitieblokken'] }
+  { key: 'pages', name: 'jf.pages', table: 'documents', url: '../jf-pages/', last: 'jf-last', one: 'document', many: 'documenten', tab: 'Documenten' },
+  { key: 'cells', name: 'jf.cells', table: 'workbooks', url: '../jf-cells/', last: 'jf-cells-last', one: 'spreadsheet', many: 'spreadsheets', tab: 'Spreadsheets' },
+  { key: 'pres', name: 'jf.presentations', table: 'presentations', url: '../jf-presentations/', last: 'jf-pres-last', one: 'presentatie', many: 'presentaties', tab: 'Presentaties' },
+  { key: 'notes', name: 'jf.notes', table: 'notebooks', url: '../jf-notes/', last: 'jf-notes-last', one: 'notitieblok', many: 'notitieblokken', tab: 'Notities' }
 ];
-let sb = null, currentUser, mode = 'login', files = [], filter = 'all', counts = {};
-function setMsg(t, type) { const m = $('authMsg'); m.textContent = t; m.className = 'msg ' + (type || 'err'); }
-function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 2200); }
-function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-function icon(k) { return '<span class="logo"><svg><use href="#i-' + k + '"/></svg></span>'; }
+let sb = null, user = null, mode = 'login', files = [], filter = 'all', counts = {}, loaded = false;
+const ico = k => '<svg><use href="#i-' + k + '"/></svg>';
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/* weergave */
 const mq = window.matchMedia('(prefers-color-scheme: dark)');
 function applyTheme() {
   const p = localStorage.getItem('jf-theme') || 'auto';
   document.documentElement.dataset.theme = (p === 'dark' || (p === 'auto' && mq.matches)) ? 'dark' : 'light';
-  const label = p === 'auto' ? '\u25D0 Auto' : p === 'light' ? '\u2600 Licht' : '\u263E Donker';
-  document.querySelectorAll('.themeBtn').forEach(b => { b.textContent = label; b.title = 'Thema voor alle jf.tools (Auto volgt je Chrome-instelling)'; });
+  [...$('themeSeg').children].forEach(b => b.classList.toggle('on', b.dataset.t === p));
 }
-document.querySelectorAll('.themeBtn').forEach(b => b.onclick = () => { const p = localStorage.getItem('jf-theme') || 'auto', n = p === 'auto' ? 'light' : p === 'light' ? 'dark' : 'auto'; localStorage.setItem('jf-theme', n); applyTheme(); toast(n === 'auto' ? 'Thema volgt nu je Chrome-instelling' : n === 'light' ? 'Licht thema' : 'Donker thema'); });
+$('themeSeg').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; localStorage.setItem('jf-theme', b.dataset.t); applyTheme(); });
 mq.addEventListener('change', applyTheme); applyTheme();
-document.addEventListener('click', e => { document.querySelectorAll('details.menu[open]').forEach(d => { if (!d.contains(e.target)) d.removeAttribute('open'); }); });
+document.addEventListener('click', e => { const m = $('acct'); if (m.open && !m.contains(e.target)) m.open = false; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('acct').open = false; });
 
+/* opstarten */
 async function getKey() {
   if (SUPABASE_KEY.indexOf('PLAK_HIER') !== 0) return SUPABASE_KEY;
   try { const r = await fetch('../jf-pages/index.html', { cache: 'no-store' }); const t = await r.text(); const m = t.match(/const SUPABASE_KEY = '([^']+)'/); if (m && m[1].indexOf('PLAK_HIER') !== 0) { localStorage.setItem('jf-sb-key', m[1]); return m[1]; } } catch (e) {}
   return localStorage.getItem('jf-sb-key');
 }
 async function init() {
-  const key = await getKey(); $('boot').classList.add('hidden');
-  if (!key) { $('auth').classList.remove('hidden'); setMsg('Kon de Supabase-key niet vinden.'); $('authSubmit').disabled = true; return; }
+  const key = await getKey(); $('boot').remove();
+  if (!key) { $('auth').classList.remove('hidden'); setMsg('De verbinding met de database is niet ingesteld.'); $('authSubmit').disabled = true; return; }
   sb = supabase.createClient(SUPABASE_URL, key);
   sb.auth.onAuthStateChange((event, session) => setTimeout(() => { if (event === 'PASSWORD_RECOVERY') changePassword(); render(session); }, 0));
 }
-document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { mode = b.dataset.mode; document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('active', x === b)); $('authSubmit').textContent = mode === 'login' ? 'Inloggen' : 'Account maken'; $('password').autocomplete = mode === 'login' ? 'current-password' : 'new-password'; setMsg(''); });
-function vertaalFout(m) {
-  if (/invalid login/i.test(m)) return 'E-mail of wachtwoord klopt niet.';
-  if (/already registered/i.test(m)) return 'Dit e-mailadres heeft al een account.';
-  if (/not confirmed/i.test(m)) return 'Bevestig eerst je e-mail (check je inbox).';
-  if (/rate limit/i.test(m)) return 'Te veel pogingen, probeer het straks opnieuw.';
+
+/* inloggen */
+function setMsg(t, ok) { const m = $('authMsg'); m.textContent = t; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
+function setMode(m) {
+  mode = m; const reg = m === 'register';
+  $('authTitle').textContent = reg ? 'Account maken' : 'Inloggen';
+  $('authLead').textContent = reg ? 'Eén account voor alle jf.tools.' : 'Welkom terug bij jf.office.';
+  $('authSubmit').textContent = reg ? 'Account maken' : 'Inloggen';
+  $('switchText').textContent = reg ? 'Heb je al een account?' : 'Nog geen account?';
+  $('switchBtn').textContent = reg ? 'Inloggen' : 'Account maken';
+  $('password').autocomplete = reg ? 'new-password' : 'current-password';
+  setMsg('');
+}
+$('switchBtn').onclick = () => setMode(mode === 'login' ? 'register' : 'login');
+function vertaal(m) {
+  if (/invalid login/i.test(m)) return 'Dit e-mailadres en wachtwoord horen niet bij elkaar.';
+  if (/already registered/i.test(m)) return 'Er bestaat al een account met dit e-mailadres. Log in.';
+  if (/not confirmed/i.test(m)) return 'Bevestig eerst je e-mailadres via de link in je inbox.';
+  if (/rate limit/i.test(m)) return 'Te veel pogingen. Wacht even en probeer het opnieuw.';
   if (/should be different/i.test(m)) return 'Kies een ander wachtwoord dan je huidige.';
   return m;
 }
 $('authForm').onsubmit = async e => {
   e.preventDefault(); if (!sb) return;
   const email = $('email').value.trim(), password = $('password').value;
-  if (password.length < 6) return setMsg('Wachtwoord moet minstens 6 tekens zijn.');
+  if (password.length < 6) return setMsg('Gebruik een wachtwoord van minstens 6 tekens.');
   $('authSubmit').disabled = true;
   const res = mode === 'login' ? await sb.auth.signInWithPassword({ email, password }) : await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } });
   $('authSubmit').disabled = false;
-  if (res.error) return setMsg(vertaalFout(res.error.message));
-  if (mode === 'register' && !res.data.session) setMsg('Account gemaakt! Check je e-mail om te bevestigen.', 'ok');
+  if (res.error) return setMsg(vertaal(res.error.message));
+  if (mode === 'register' && !res.data.session) setMsg('Account gemaakt. Open de link in je e-mail om het te bevestigen.', true);
 };
-$('forgot').onclick = async () => { if (!sb) return; const email = $('email').value.trim(); if (!email) return setMsg('Vul eerst je e-mail in.'); const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); setMsg(error ? vertaalFout(error.message) : 'Reset-link verstuurd naar je e-mail.', error ? 'err' : 'ok'); };
-async function changePassword() { const np = prompt('Nieuw wachtwoord (minstens 6 tekens):'); if (!np) return; if (np.length < 6) return alert('Wachtwoord moet minstens 6 tekens zijn.'); const { error } = await sb.auth.updateUser({ password: np }); alert(error ? vertaalFout(error.message) : 'Wachtwoord aangepast!'); }
-$('pwBtn').onclick = changePassword;
-$('logout').onclick = async () => { await sb.auth.signOut(); };
+$('forgot').onclick = async () => { if (!sb) return; const email = $('email').value.trim(); if (!email) { $('email').focus(); return setMsg('Vul eerst je e-mailadres in.'); } const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); if (error) setMsg(vertaal(error.message)); else setMsg('We hebben een link gestuurd om je wachtwoord opnieuw in te stellen.', true); };
+async function changePassword() { const np = prompt('Nieuw wachtwoord (minstens 6 tekens):'); if (!np) return; if (np.length < 6) return alert('Gebruik een wachtwoord van minstens 6 tekens.'); const { error } = await sb.auth.updateUser({ password: np }); alert(error ? vertaal(error.message) : 'Je wachtwoord is gewijzigd.'); }
+$('pwBtn').onclick = () => { $('acct').open = false; changePassword(); };
+$('logout').onclick = () => { $('acct').open = false; sb.auth.signOut(); };
+$('nameBtn').onclick = async () => {
+  $('acct').open = false;
+  const n = prompt('Hoe mogen we je noemen?', displayName()); if (n === null) return;
+  const { data, error } = await sb.auth.updateUser({ data: { name: n.trim() } });
+  if (error) return alert(error.message); user = data.user; greet();
+};
 
+/* startscherm */
+function displayName() {
+  const n = user && user.user_metadata && user.user_metadata.name; if (n) return n;
+  const p = ((user && user.email) || '').split('@')[0].replace(/[._\-0-9]+/g, ' ').trim().split(' ')[0] || '';
+  return p ? p[0].toUpperCase() + p.slice(1) : '';
+}
 function render(session) {
-  const u = session && session.user ? session.user.id : null;
-  if (u === currentUser) return; currentUser = u;
+  const u = session && session.user ? session.user : null;
+  if ((u && u.id) === (user && user.id)) return;
+  user = u;
   $('auth').classList.toggle('hidden', !!u); $('home').classList.toggle('hidden', !u);
-  if (u) { $('userEmail').textContent = session.user.email; greet(session.user.email); renderApps(); loadFiles(); }
-  else { $('password').value = ''; files = []; }
+  if (!u) { $('password').value = ''; files = []; loaded = false; return; }
+  greet(); renderApps(); renderTabs(); loadFiles();
 }
-function greet(email) {
-  const h = new Date().getHours(), part = h < 6 ? 'Goedenacht' : h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond';
-  let name = (email || '').split('@')[0].replace(/[._\-0-9]+/g, ' ').trim().split(' ')[0] || '';
-  name = name ? name[0].toUpperCase() + name.slice(1) : '';
-  $('hello').textContent = part + (name ? ', ' + name : '') + '!';
-  $('today').textContent = 'Het is ' + new Date().toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '. Waar ga je aan werken?';
+function greet() {
+  const h = new Date().getHours(), part = h < 6 ? 'Goedenacht' : h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond', n = displayName();
+  const h1 = $('hello'), quad = h1.querySelector('.quad'); h1.textContent = part + (n ? ', ' + n : ''); h1.append(quad);
+  const d = new Date().toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' });
+  $('today').textContent = d[0].toUpperCase() + d.slice(1);
+  $('avatar').textContent = (n || (user.email || '?'))[0].toUpperCase();
+  $('whoName').textContent = n || 'Jouw account'; $('whoMail').textContent = user.email;
 }
-function renderApps() {
-  $('apps').innerHTML = APPS.map(a => '<a class="app" href="' + a.url + '" style="--c:' + a.color + '">' + icon(a.key) + '<div><b>' + a.name + '</b><div class="ds">' + a.desc + '</div></div><div class="cnt" data-cnt="' + a.key + '">' + (counts[a.key] === undefined ? '&nbsp;' : counts[a.key] + ' ' + a.word[counts[a.key] === 1 ? 0 : 1]) + '</div></a>').join('');
-  $('filters').innerHTML = '<button data-f="all"' + (filter === 'all' ? ' class="on"' : '') + '>Alles</button>' + APPS.map(a => '<button data-f="' + a.key + '"' + (filter === a.key ? ' class="on"' : '') + '>' + a.word[1][0].toUpperCase() + a.word[1].slice(1) + '</button>').join('');
-}
-$('filters').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; filter = b.dataset.f; [...$('filters').children].forEach(x => x.classList.toggle('on', x === b)); renderFiles(); });
+function countText(a) { const c = counts[a.key]; if (!loaded) return '&nbsp;'; if (!c) return 'Nog leeg'; return c + ' ' + (c === 1 ? a.one : a.many); }
+function renderApps() { $('apps').innerHTML = APPS.map(a => '<a class="app" href="' + a.url + '">' + ico(a.key) + '<div><b>' + a.name + '</b><span>' + countText(a) + '</span></div></a>').join(''); }
+function renderTabs() { $('tabs').innerHTML = '<button data-f="all"' + (filter === 'all' ? ' class="on"' : '') + '>Alles</button>' + APPS.map(a => '<button data-f="' + a.key + '"' + (filter === a.key ? ' class="on"' : '') + '>' + a.tab + '</button>').join(''); }
+$('tabs').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; filter = b.dataset.f; renderTabs(); renderFiles(); });
 async function loadFiles() {
-  const res = await Promise.all(APPS.map(a => sb.from(a.table).select('id,title,updated_at,pinned,is_public').is('deleted_at', null).order('updated_at', { ascending: false }).limit(100).then(r => ({ a, r }))));
+  const res = await Promise.all(APPS.map(a => sb.from(a.table).select('id,title,updated_at,pinned,is_public').is('deleted_at', null).order('updated_at', { ascending: false }).limit(200).then(r => ({ a, r }))));
   files = [];
-  res.forEach(({ a, r }) => { if (r.error) { counts[a.key] = 0; return; } counts[a.key] = r.data.length; r.data.forEach(d => files.push(Object.assign({ app: a }, d))); });
+  res.forEach(({ a, r }) => { const rows = r.error ? [] : r.data; counts[a.key] = rows.length; rows.forEach(d => files.push(Object.assign({ app: a }, d))); });
   files.sort((x, y) => y.updated_at.localeCompare(x.updated_at));
-  renderApps(); renderFiles();
+  loaded = true; renderApps(); renderFiles();
 }
-function fmtDate(s) {
-  const d = new Date(s), now = new Date(), tm = d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
-  if (d.toDateString() === now.toDateString()) return 'Vandaag ' + tm;
-  const y = new Date(now); y.setDate(now.getDate() - 1); if (d.toDateString() === y.toDateString()) return 'Gisteren ' + tm;
-  return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' });
+function when(s) {
+  const d = new Date(s), now = new Date(), t = d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+  if (d.toDateString() === now.toDateString()) return 'Vandaag ' + t;
+  const y = new Date(now); y.setDate(now.getDate() - 1); if (d.toDateString() === y.toDateString()) return 'Gisteren ' + t;
+  return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: d.getFullYear() === now.getFullYear() ? undefined : 'numeric' });
 }
 function renderFiles() {
   const q = $('search').value.trim().toLowerCase();
   const list = files.filter(f => (filter === 'all' || f.app.key === filter) && (!q || (f.title || '').toLowerCase().includes(q)));
-  const shown = q ? list : list.slice(0, 25);
-  $('files').innerHTML = shown.length ? shown.map(f => '<div class="file" data-app="' + f.app.key + '" data-id="' + f.id + '">' + icon(f.app.key) + '<div class="t"><b>' + (f.pinned ? '\u2605 ' : '') + esc(f.title || 'Naamloos') + (f.is_public ? ' \uD83D\uDD17' : '') + '</b><span>' + f.app.name + '</span></div><div class="d">' + fmtDate(f.updated_at) + '</div></div>').join('')
-    : '<div class="empty">' + (q ? 'Niks gevonden voor "' + esc(q) + '".' : files.length ? 'Geen bestanden in deze categorie.' : 'Nog geen bestanden. Open een app hierboven om te beginnen!') + '</div>';
-  const favs = files.filter(f => f.pinned).slice(0, 12);
+  const shown = q ? list : list.slice(0, 30);
+  if (!shown.length) {
+    $('files').innerHTML = '<div class="empty">' + (q ? '<b>Niets gevonden</b>Geen bestand heeft "' + esc(q) + '" in de naam.' : files.length ? '<b>Hier staat nog niets</b>Je hebt nog geen bestanden van dit soort.' : '<b>Je hebt nog geen bestanden</b>Kies hierboven een app om te beginnen.') + '</div>';
+  } else {
+    $('files').innerHTML = '<div class="row head"><span>Naam</span><span class="a">App</span><span class="d">Bewerkt</span></div>' + shown.map(f => '<button class="row" data-app="' + f.app.key + '" data-id="' + f.id + '"><span class="n">' + ico(f.app.key) + '<span>' + esc(f.title || 'Naamloos') + '</span>' + (f.is_public ? '<em class="badge">gedeeld</em>' : '') + '</span><span class="a">' + f.app.name + '</span><span class="d">' + when(f.updated_at) + '</span></button>').join('');
+  }
+  const favs = files.filter(f => f.pinned).slice(0, 10);
   $('favWrap').classList.toggle('hidden', !favs.length || !!q);
-  $('favs').innerHTML = favs.map(f => '<div class="fav" style="--c:' + f.app.color + '" data-app="' + f.app.key + '" data-id="' + f.id + '">' + icon(f.app.key) + '<div style="min-width:0"><b>' + esc(f.title || 'Naamloos') + '</b><span>' + f.app.name + '</span></div></div>').join('');
+  $('favs').innerHTML = favs.map(f => '<button class="fav" data-app="' + f.app.key + '" data-id="' + f.id + '">' + ico(f.app.key) + '<span>' + esc(f.title || 'Naamloos') + '</span></button>').join('');
 }
 function openFile(key, id) { const a = APPS.find(x => x.key === key); if (!a) return; try { localStorage.setItem(a.last, id); } catch (e) {} location.href = a.url; }
-document.addEventListener('click', e => { const f = e.target.closest('.file,.fav'); if (f) openFile(f.dataset.app, f.dataset.id); });
+document.addEventListener('click', e => { const f = e.target.closest('[data-id][data-app]'); if (f) openFile(f.dataset.app, f.dataset.id); });
 $('search').addEventListener('input', renderFiles);
-$('search').addEventListener('keydown', e => { if (e.key === 'Enter') { const f = $('files').querySelector('.file'); if (f) openFile(f.dataset.app, f.dataset.id); } if (e.key === 'Escape') { $('search').value = ''; renderFiles(); } });
-document.addEventListener('keydown', e => { if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && !$('home').classList.contains('hidden')) { e.preventDefault(); $('search').focus(); } });
-window.addEventListener('focus', () => { if (currentUser && sb) loadFiles(); });
+$('search').addEventListener('keydown', e => { if (e.key === 'Enter') { const f = $('files').querySelector('button.row'); if (f) openFile(f.dataset.app, f.dataset.id); } if (e.key === 'Escape') { $('search').value = ''; renderFiles(); $('search').blur(); } });
+document.addEventListener('keydown', e => { if (e.key === '/' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName) && user) { e.preventDefault(); $('search').focus(); } });
+window.addEventListener('focus', () => { if (user && sb) loadFiles(); });
 init();
 </script>
 </body>
