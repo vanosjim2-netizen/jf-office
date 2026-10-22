@@ -296,7 +296,7 @@ function displayName() {
 }
 function render(session) {
   const u = session && session.user ? session.user : null;
-  if ((u && u.id) === (user && user.id)) return;
+  if (window.__r && (u && u.id) === (user && user.id)) return; window.__r = true;
   user = u;
   $('auth').classList.toggle('hidden', !!u); $('home').classList.toggle('hidden', !u);
   if (!u) { $('password').value = ''; files = []; loaded = false; return; }
