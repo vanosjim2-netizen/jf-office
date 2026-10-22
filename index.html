@@ -260,6 +260,7 @@ function setMode(m) {
 }
 $('switchBtn').onclick = () => setMode(mode === 'login' ? 'register' : 'login');
 function vertaal(m) {
+  if (/failed to fetch|network|load failed/i.test(m)) return 'Geen verbinding met de server. Check je internet, zet een adblocker voor deze site uit en probeer het opnieuw.';
   if (/invalid login/i.test(m)) return 'Dit e-mailadres en wachtwoord horen niet bij elkaar.';
   if (/already registered/i.test(m)) return 'Er bestaat al een account met dit e-mailadres. Log in.';
   if (/not confirmed/i.test(m)) return 'Bevestig eerst je e-mailadres via de link in je inbox.';
@@ -272,7 +273,7 @@ $('authForm').onsubmit = async e => {
   const email = $('email').value.trim(), password = $('password').value;
   if (password.length < 6) return setMsg('Gebruik een wachtwoord van minstens 6 tekens.');
   $('authSubmit').disabled = true;
-  const res = mode === 'login' ? await sb.auth.signInWithPassword({ email, password }) : await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } });
+  let res; try { res = mode === 'login' ? await sb.auth.signInWithPassword({ email, password }) : await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } }); } catch (err) { res = { error: { message: String(err && err.message || err) } }; }
   $('authSubmit').disabled = false;
   if (res.error) return setMsg(vertaal(res.error.message));
   if (mode === 'register' && !res.data.session) setMsg('Account gemaakt. Open de link in je e-mail om het te bevestigen.', true);
