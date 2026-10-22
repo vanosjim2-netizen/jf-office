@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jf.office</title>
+<script>
+(function(){var p=localStorage.getItem('jf-theme')||'auto';var d=p==='dark'||(p==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f4f4f6;--panel:#fff;--line:#e3e3e8;--hover:#ececf1;--text:#16161a;--muted:#6b6b76;--accent:#3b6cff;--tint:rgba(59,108,255,.1);--shadow:0 1px 4px rgba(0,0,0,.08);--danger:#e03131}
+[data-theme=dark]{--bg:#0f0f10;--panel:#18181b;--line:#2a2a2e;--hover:#222226;--text:#f4f4f5;--muted:#9a9aa3;--accent:#6b8cff;--tint:rgba(107,140,255,.14);--shadow:none;--danger:#ff6b6b}
+html,body{min-height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+button,input{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+.boot{height:100vh;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:600}
+.logo{display:flex}.logo svg{width:36px;height:36px}
+.dot{color:var(--accent)}
+#auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
+#auth .themeBtn{position:absolute;top:16px;right:16px}
+.auth-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:34px;width:100%;max-width:400px;box-shadow:var(--shadow)}
+.auth-card .brand{font-size:26px}.auth-card .logo svg{width:46px;height:46px}
+.sub{color:var(--muted);font-size:14px;margin-top:8px}
+.mini-apps{display:flex;gap:8px;margin-top:16px}
+.mini-apps .logo svg{width:30px;height:30px}
+.tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:10px;margin:22px 0 16px}
+.tabs button{flex:1;padding:8px;border:0;border-radius:8px;background:transparent;color:var(--muted)}
+.tabs button.active{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+.field{display:block;margin-bottom:12px}
+.field span{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.inp{width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text)}
+.inp:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.btn{padding:10px 14px;border:0;border-radius:8px;background:#111;color:#fff;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+[data-theme=dark] .btn{background:#f4f4f5;color:#111}
+.btn:disabled{opacity:.6;cursor:default}
+.full{width:100%}
+.link{background:none;border:0;color:var(--muted);font-size:13px;margin-top:12px;text-decoration:underline}
+.msg{font-size:13px;margin-top:12px;min-height:18px}
+.msg.err{color:var(--danger)}.msg.ok{color:#2f9e44}
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:0 20px;height:58px;border-bottom:1px solid var(--line);background:var(--panel)}
+header .logo svg{width:32px;height:32px}
+.spacer{flex:1}
+.icon-btn{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 11px;font-size:13px;white-space:nowrap}
+.icon-btn:hover{background:var(--hover)}
+.icon-btn.on{border-color:var(--accent);color:var(--accent)}
+.menu{position:relative}
+.menu summary{list-style:none}
+.menu summary::-webkit-details-marker{display:none}
+.menu-pop{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:220px;z-index:40;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.menu-pop button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--text);padding:8px 10px;border-radius:6px;font-size:14px}
+.menu-pop button:hover{background:var(--hover)}
+.menu-pop .info{padding:8px 10px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);margin-bottom:4px;word-break:break-all}
+main{max-width:1100px;margin:0 auto;padding:34px 20px 60px}
+.hello h1{font-size:30px;font-weight:700}
+.hello p{color:var(--muted);margin-top:4px}
+.search-row{margin:22px 0 28px;position:relative}
+.search-row .inp{padding:13px 16px 13px 44px;font-size:16px;border-radius:12px;background:var(--panel)}
+.search-row span{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.app{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;overflow:hidden}
+.app::after{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--c)}
+.app:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.12);border-color:var(--c)}
+.app .logo svg{width:52px;height:52px}
+.app b{font-size:17px}
+.app .ds{font-size:13px;color:var(--muted);margin-top:2px}
+.app .cnt{font-size:12px;color:var(--muted);margin-top:auto}
+h2.sec{font-size:17px;margin:34px 0 12px;display:flex;align-items:center;gap:10px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:6px 14px;font-size:13px}
+.filters button.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.files{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.file{display:flex;align-items:center;gap:14px;padding:11px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.file:last-child{border-bottom:0}
+.file:hover{background:var(--hover)}
+.file .logo svg{width:30px;height:30px}
+.file .t{flex:1;min-width:0}
+.file .t b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file .t span{font-size:12px;color:var(--muted)}
+.file .d{font-size:12px;color:var(--muted);white-space:nowrap}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:14px}
+.favs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.fav{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.fav:hover{background:var(--hover)}
+.fav .logo svg{width:26px;height:26px}
+.fav b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.fav span{font-size:12px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 0 10px}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;z-index:200}
+@media(max-width:860px){.apps{grid-template-columns:repeat(2,1fr)}.hello h1{font-size:24px}}
+@media(max-width:480px){.apps{grid-template-columns:1fr 1fr;gap:10px}.app{padding:14px}.app .logo svg{width:42px;height:42px}.file .d{display:none}}
+</style>
+</head>
+<body>
+<div class="boot" id="boot">Laden...</div>
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<symbol id="i-office" viewBox="40 40 220 220"><rect x="42" y="42" width="216" height="216" rx="48" fill="#111" stroke="#2a2a2e" stroke-width="4"/><rect x="62" y="62" width="82" height="82" rx="16" fill="#3b6cff"/><rect x="156" y="62" width="82" height="82" rx="16" fill="#2f9e44"/><rect x="62" y="156" width="82" height="82" rx="16" fill="#fab005"/><rect x="156" y="156" width="82" height="82" rx="16" fill="#e03131"/><rect x="80" y="80" width="30" height="5" rx="2.5" fill="#fff" opacity=".9"/><rect x="80" y="91" width="44" height="5" rx="2.5" fill="#fff" opacity=".6"/><rect x="190" y="80" width="30" height="22" rx="3" fill="none" stroke="#fff" stroke-width="3"/><line x1="205" y1="80" x2="205" y2="102" stroke="#fff" stroke-width="3"/><rect x="80" y="210" width="8" height="12" rx="2" fill="#111" opacity=".55"/><rect x="92" y="203" width="8" height="19" rx="2" fill="#111" opacity=".55"/><rect x="200" y="206" width="16" height="16" rx="3" fill="none" stroke="#fff" stroke-width="3"/><polyline points="203,214 207,218 214,209" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="110" y="124" width="80" height="52" rx="14" fill="#fff" stroke="#111" stroke-width="5"/><text x="150" y="161" text-anchor="middle" font-size="30" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#3b6cff">.</tspan></text></symbol>
+<symbol id="i-pages" viewBox="60 50 200 200"><rect x="64" y="54" width="192" height="192" rx="42" fill="#111" stroke="#2a2a2e" stroke-width="6"/><path d="M105 86q0-6 6-6h74l30 30v109q0 6-6 6h-98q-6 0-6-6z" fill="#fff"/><path d="M185 80v24q0 6 6 6h24z" fill="#9db4ff"/><text x="120" y="150" font-size="46" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#3b6cff">.</tspan></text><rect x="120" y="170" width="80" height="7" rx="3.5" fill="#3b6cff"/><rect x="120" y="186" width="64" height="7" rx="3.5" fill="#c9d5ff"/><rect x="120" y="202" width="72" height="7" rx="3.5" fill="#c9d5ff"/></symbol>
+<symbol id="i-cells" viewBox="70 155 200 200"><rect x="74" y="159" width="192" height="192" rx="42" fill="#111" stroke="#2a2a2e" stroke-width="6"/><rect x="102" y="187" width="136" height="136" rx="10" fill="#fff"/><path d="M102 197q0-10 10-10h116q10 0 10 10v24h-136z" fill="#2f9e44"/><text x="114" y="214" font-size="22" font-weight="700" font-family="system-ui,sans-serif" fill="#fff">jf.</text><path d="M102 313v-92h30v102h-20q-10 0-10-10z" fill="#d3f9d8"/><line x1="132" y1="221" x2="132" y2="323" stroke="#b2dfbd" stroke-width="2"/><line x1="185" y1="221" x2="185" y2="323" stroke="#b2dfbd" stroke-width="2"/><line x1="102" y1="255" x2="238" y2="255" stroke="#b2dfbd" stroke-width="2"/><line x1="102" y1="289" x2="238" y2="289" stroke="#b2dfbd" stroke-width="2"/><rect x="133" y="256" width="51" height="32" fill="#e6f7ea" stroke="#2f9e44" stroke-width="3"/><rect x="194" y="236" width="34" height="7" rx="3.5" fill="#2f9e44"/></symbol>
+<symbol id="i-pres" viewBox="190 105 300 300"><rect x="194" y="109" width="292" height="292" rx="64" fill="#111" stroke="#2a2a2e" stroke-width="8"/><rect x="220" y="150" width="240" height="140" rx="10" fill="#fff"/><path d="M220 160q0-10 10-10h220q10 0 10 10v4h-240z" fill="#fab005"/><text x="238" y="212" font-size="40" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#f59f00">.</tspan></text><rect x="238" y="230" width="90" height="8" rx="4" fill="#fab005"/><rect x="238" y="248" width="70" height="8" rx="4" fill="#ffe8a3"/><rect x="372" y="242" width="16" height="34" rx="3" fill="#ffe066"/><rect x="394" y="222" width="16" height="54" rx="3" fill="#fcc419"/><rect x="416" y="200" width="16" height="76" rx="3" fill="#f59f00"/><rect x="220" y="314" width="66" height="40" rx="6" fill="#3a3a40"/><rect x="307" y="314" width="66" height="40" rx="6" fill="#fff" stroke="#fab005" stroke-width="4"/><rect x="394" y="314" width="66" height="40" rx="6" fill="#3a3a40"/></symbol>
+<symbol id="i-notes" viewBox="420 40 220 220"><rect x="424" y="44" width="212" height="212" rx="46" fill="#111" stroke="#2a2a2e" stroke-width="6"/><rect x="462" y="74" width="128" height="152" rx="10" fill="#fff"/><rect x="588" y="88" width="18" height="24" rx="5" fill="#e03131"/><rect x="588" y="118" width="18" height="24" rx="5" fill="#ff8787"/><rect x="588" y="148" width="18" height="24" rx="5" fill="#ffc9c9"/><rect x="452" y="92" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="120" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="148" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="176" width="20" height="9" rx="4.5" fill="#e03131"/><rect x="452" y="204" width="20" height="9" rx="4.5" fill="#e03131"/><text x="482" y="117" font-size="30" font-weight="700" font-family="system-ui,sans-serif" fill="#111">jf<tspan fill="#e03131">.</tspan></text><rect x="482" y="132" width="86" height="6" rx="3" fill="#e03131"/><rect x="482" y="152" width="15" height="15" rx="3" fill="none" stroke="#e03131" stroke-width="3"/><polyline points="485,159 489,163 495,155" fill="none" stroke="#e03131" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="505" y="156" width="62" height="6" rx="3" fill="#ffc9c9"/><rect x="482" y="178" width="15" height="15" rx="3" fill="none" stroke="#e03131" stroke-width="3"/><rect x="505" y="182" width="50" height="6" rx="3" fill="#ffc9c9"/></symbol>
+</defs>
+</svg>
+
+<div id="auth" class="hidden">
+  <button class="icon-btn themeBtn"></button>
+  <div class="auth-card">
+    <div class="brand"><span class="logo"><svg><use href="#i-office"/></svg></span><span>jf<span class="dot">.</span>office</span></div>
+    <p class="sub">Eén account voor al je jf.tools: documenten, spreadsheets, presentaties en notities.</p>
+    <div class="mini-apps"><span class="logo"><svg><use href="#i-pages"/></svg></span><span class="logo"><svg><use href="#i-cells"/></svg></span><span class="logo"><svg><use href="#i-pres"/></svg></span><span class="logo"><svg><use href="#i-notes"/></svg></span></div>
+    <div class="tabs">
+      <button type="button" data-mode="login" class="active">Inloggen</button>
+      <button type="button" data-mode="register">Registreren</button>
+    </div>
+    <form id="authForm">
+      <label class="field"><span>E-mail</span><input class="inp" type="email" id="email" required autocomplete="email"></label>
+      <label class="field"><span>Wachtwoord</span><input class="inp" type="password" id="password" required autocomplete="current-password"></label>
+      <button class="btn full" id="authSubmit" type="submit">Inloggen</button>
+    </form>
+    <button class="link" id="forgot" type="button">Wachtwoord vergeten?</button>
+    <div class="msg" id="authMsg"></div>
+  </div>
+</div>
+
+<div id="home" class="hidden">
+  <header>
+    <a class="brand" href="./"><span class="logo"><svg><use href="#i-office"/></svg></span><span>jf<span class="dot">.</span>office</span></a>
+    <div class="spacer"></div>
+    <button class="icon-btn themeBtn"></button>
+    <details class="menu">
+      <summary class="icon-btn">&#9881; Account</summary>
+      <div class="menu-pop">
+        <div class="info" id="userEmail"></div>
+        <button id="pwBtn">Wachtwoord wijzigen</button>
+        <button id="logout">Uitloggen</button>
+      </div>
+    </details>
+  </header>
+  <main>
+    <div class="hello"><h1 id="hello">Hallo!</h1><p id="today"></p></div>
+    <div class="search-row"><span>&#128269;</span><input class="inp" id="search" placeholder="Zoek in al je documenten, spreadsheets, presentaties en notities...  (druk op /)"></div>
+    <div class="apps" id="apps"></div>
+    <div id="favWrap" class="hidden"><h2 class="sec">&#9733; Favorieten</h2><div class="favs" id="favs"></div></div>
+    <h2 class="sec">&#128338; Recent</h2>
+    <div class="filters" id="filters"></div>
+    <div class="files" id="files"><div class="empty">Laden...</div></div>
+    <footer>jf.office &middot; gemaakt door Jim</footer>
+  </main>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://azzhruqhvmxqwsyatlju.supabase.co';
+let SUPABASE_KEY = 'PLAK_HIER_JE_ANON_KEY';
+const $ = id => document.getElementById(id);
+const APPS = [
+  { key: 'pages', name: 'jf.pages', desc: 'Documenten schrijven', table: 'documents', url: '../jf-pages/', last: 'jf-last', color: '#3b6cff', word: ['document', 'documenten'] },
+  { key: 'cells', name: 'jf.cells', desc: 'Spreadsheets en rekenen', table: 'workbooks', url: '../jf-cells/', last: 'jf-cells-last', color: '#2f9e44', word: ['spreadsheet', 'spreadsheets'] },
+  { key: 'pres', name: 'jf.presentations', desc: 'Presentaties maken', table: 'presentations', url: '../jf-presentations/', last: 'jf-pres-last', color: '#fab005', word: ['presentatie', 'presentaties'] },
+  { key: 'notes', name: 'jf.notes', desc: 'Notitieblokken', table: 'notebooks', url: '../jf-notes/', last: 'jf-notes-last', color: '#e03131', word: ['notitieblok', 'notitieblokken'] }
+];
+let sb = null, currentUser, mode = 'login', files = [], filter = 'all', counts = {};
+function setMsg(t, type) { const m = $('authMsg'); m.textContent = t; m.className = 'msg ' + (type || 'err'); }
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 2200); }
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function icon(k) { return '<span class="logo"><svg><use href="#i-' + k + '"/></svg></span>'; }
+
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+function applyTheme() {
+  const p = localStorage.getItem('jf-theme') || 'auto';
+  document.documentElement.dataset.theme = (p === 'dark' || (p === 'auto' && mq.matches)) ? 'dark' : 'light';
+  const label = p === 'auto' ? '\u25D0 Auto' : p === 'light' ? '\u2600 Licht' : '\u263E Donker';
+  document.querySelectorAll('.themeBtn').forEach(b => { b.textContent = label; b.title = 'Thema voor alle jf.tools (Auto volgt je Chrome-instelling)'; });
+}
+document.querySelectorAll('.themeBtn').forEach(b => b.onclick = () => { const p = localStorage.getItem('jf-theme') || 'auto', n = p === 'auto' ? 'light' : p === 'light' ? 'dark' : 'auto'; localStorage.setItem('jf-theme', n); applyTheme(); toast(n === 'auto' ? 'Thema volgt nu je Chrome-instelling' : n === 'light' ? 'Licht thema' : 'Donker thema'); });
+mq.addEventListener('change', applyTheme); applyTheme();
+document.addEventListener('click', e => { document.querySelectorAll('details.menu[open]').forEach(d => { if (!d.contains(e.target)) d.removeAttribute('open'); }); });
+
+async function getKey() {
+  if (SUPABASE_KEY.indexOf('PLAK_HIER') !== 0) return SUPABASE_KEY;
+  try { const r = await fetch('../jf-pages/index.html', { cache: 'no-store' }); const t = await r.text(); const m = t.match(/const SUPABASE_KEY = '([^']+)'/); if (m && m[1].indexOf('PLAK_HIER') !== 0) { localStorage.setItem('jf-sb-key', m[1]); return m[1]; } } catch (e) {}
+  return localStorage.getItem('jf-sb-key');
+}
+async function init() {
+  const key = await getKey(); $('boot').classList.add('hidden');
+  if (!key) { $('auth').classList.remove('hidden'); setMsg('Kon de Supabase-key niet vinden.'); $('authSubmit').disabled = true; return; }
+  sb = supabase.createClient(SUPABASE_URL, key);
+  sb.auth.onAuthStateChange((event, session) => setTimeout(() => { if (event === 'PASSWORD_RECOVERY') changePassword(); render(session); }, 0));
+}
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { mode = b.dataset.mode; document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('active', x === b)); $('authSubmit').textContent = mode === 'login' ? 'Inloggen' : 'Account maken'; $('password').autocomplete = mode === 'login' ? 'current-password' : 'new-password'; setMsg(''); });
+function vertaalFout(m) {
+  if (/invalid login/i.test(m)) return 'E-mail of wachtwoord klopt niet.';
+  if (/already registered/i.test(m)) return 'Dit e-mailadres heeft al een account.';
+  if (/not confirmed/i.test(m)) return 'Bevestig eerst je e-mail (check je inbox).';
+  if (/rate limit/i.test(m)) return 'Te veel pogingen, probeer het straks opnieuw.';
+  if (/should be different/i.test(m)) return 'Kies een ander wachtwoord dan je huidige.';
+  return m;
+}
+$('authForm').onsubmit = async e => {
+  e.preventDefault(); if (!sb) return;
+  const email = $('email').value.trim(), password = $('password').value;
+  if (password.length < 6) return setMsg('Wachtwoord moet minstens 6 tekens zijn.');
+  $('authSubmit').disabled = true;
+  const res = mode === 'login' ? await sb.auth.signInWithPassword({ email, password }) : await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } });
+  $('authSubmit').disabled = false;
+  if (res.error) return setMsg(vertaalFout(res.error.message));
+  if (mode === 'register' && !res.data.session) setMsg('Account gemaakt! Check je e-mail om te bevestigen.', 'ok');
+};
+$('forgot').onclick = async () => { if (!sb) return; const email = $('email').value.trim(); if (!email) return setMsg('Vul eerst je e-mail in.'); const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); setMsg(error ? vertaalFout(error.message) : 'Reset-link verstuurd naar je e-mail.', error ? 'err' : 'ok'); };
+async function changePassword() { const np = prompt('Nieuw wachtwoord (minstens 6 tekens):'); if (!np) return; if (np.length < 6) return alert('Wachtwoord moet minstens 6 tekens zijn.'); const { error } = await sb.auth.updateUser({ password: np }); alert(error ? vertaalFout(error.message) : 'Wachtwoord aangepast!'); }
+$('pwBtn').onclick = changePassword;
+$('logout').onclick = async () => { await sb.auth.signOut(); };
+
+function render(session) {
+  const u = session && session.user ? session.user.id : null;
+  if (u === currentUser) return; currentUser = u;
+  $('auth').classList.toggle('hidden', !!u); $('home').classList.toggle('hidden', !u);
+  if (u) { $('userEmail').textContent = session.user.email; greet(session.user.email); renderApps(); loadFiles(); }
+  else { $('password').value = ''; files = []; }
+}
+function greet(email) {
+  const h = new Date().getHours(), part = h < 6 ? 'Goedenacht' : h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond';
+  let name = (email || '').split('@')[0].replace(/[._\-0-9]+/g, ' ').trim().split(' ')[0] || '';
+  name = name ? name[0].toUpperCase() + name.slice(1) : '';
+  $('hello').textContent = part + (name ? ', ' + name : '') + '!';
+  $('today').textContent = 'Het is ' + new Date().toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '. Waar ga je aan werken?';
+}
+function renderApps() {
+  $('apps').innerHTML = APPS.map(a => '<a class="app" href="' + a.url + '" style="--c:' + a.color + '">' + icon(a.key) + '<div><b>' + a.name + '</b><div class="ds">' + a.desc + '</div></div><div class="cnt" data-cnt="' + a.key + '">' + (counts[a.key] === undefined ? '&nbsp;' : counts[a.key] + ' ' + a.word[counts[a.key] === 1 ? 0 : 1]) + '</div></a>').join('');
+  $('filters').innerHTML = '<button data-f="all"' + (filter === 'all' ? ' class="on"' : '') + '>Alles</button>' + APPS.map(a => '<button data-f="' + a.key + '"' + (filter === a.key ? ' class="on"' : '') + '>' + a.word[1][0].toUpperCase() + a.word[1].slice(1) + '</button>').join('');
+}
+$('filters').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (!b) return; filter = b.dataset.f; [...$('filters').children].forEach(x => x.classList.toggle('on', x === b)); renderFiles(); });
+async function loadFiles() {
+  const res = await Promise.all(APPS.map(a => sb.from(a.table).select('id,title,updated_at,pinned,is_public').is('deleted_at', null).order('updated_at', { ascending: false }).limit(100).then(r => ({ a, r }))));
+  files = [];
+  res.forEach(({ a, r }) => { if (r.error) { counts[a.key] = 0; return; } counts[a.key] = r.data.length; r.data.forEach(d => files.push(Object.assign({ app: a }, d))); });
+  files.sort((x, y) => y.updated_at.localeCompare(x.updated_at));
+  renderApps(); renderFiles();
+}
+function fmtDate(s) {
+  const d = new Date(s), now = new Date(), tm = d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+  if (d.toDateString() === now.toDateString()) return 'Vandaag ' + tm;
+  const y = new Date(now); y.setDate(now.getDate() - 1); if (d.toDateString() === y.toDateString()) return 'Gisteren ' + tm;
+  return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function renderFiles() {
+  const q = $('search').value.trim().toLowerCase();
+  const list = files.filter(f => (filter === 'all' || f.app.key === filter) && (!q || (f.title || '').toLowerCase().includes(q)));
+  const shown = q ? list : list.slice(0, 25);
+  $('files').innerHTML = shown.length ? shown.map(f => '<div class="file" data-app="' + f.app.key + '" data-id="' + f.id + '">' + icon(f.app.key) + '<div class="t"><b>' + (f.pinned ? '\u2605 ' : '') + esc(f.title || 'Naamloos') + (f.is_public ? ' \uD83D\uDD17' : '') + '</b><span>' + f.app.name + '</span></div><div class="d">' + fmtDate(f.updated_at) + '</div></div>').join('')
+    : '<div class="empty">' + (q ? 'Niks gevonden voor "' + esc(q) + '".' : files.length ? 'Geen bestanden in deze categorie.' : 'Nog geen bestanden. Open een app hierboven om te beginnen!') + '</div>';
+  const favs = files.filter(f => f.pinned).slice(0, 12);
+  $('favWrap').classList.toggle('hidden', !favs.length || !!q);
+  $('favs').innerHTML = favs.map(f => '<div class="fav" style="--c:' + f.app.color + '" data-app="' + f.app.key + '" data-id="' + f.id + '">' + icon(f.app.key) + '<div style="min-width:0"><b>' + esc(f.title || 'Naamloos') + '</b><span>' + f.app.name + '</span></div></div>').join('');
+}
+function openFile(key, id) { const a = APPS.find(x => x.key === key); if (!a) return; try { localStorage.setItem(a.last, id); } catch (e) {} location.href = a.url; }
+document.addEventListener('click', e => { const f = e.target.closest('.file,.fav'); if (f) openFile(f.dataset.app, f.dataset.id); });
+$('search').addEventListener('input', renderFiles);
+$('search').addEventListener('keydown', e => { if (e.key === 'Enter') { const f = $('files').querySelector('.file'); if (f) openFile(f.dataset.app, f.dataset.id); } if (e.key === 'Escape') { $('search').value = ''; renderFiles(); } });
+document.addEventListener('keydown', e => { if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && !$('home').classList.contains('hidden')) { e.preventDefault(); $('search').focus(); } });
+window.addEventListener('focus', () => { if (currentUser && sb) loadFiles(); });
+init();
+</script>
+</body>
+</html>
